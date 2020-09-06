@@ -16,8 +16,10 @@ class MiniImagenetLoader(data.Dataset):
         # set dataset information
         self.root = root
         self.partition = partition
-        self.data_size = [3, 84, 84]
-
+        if tt.arg.features:
+            self.data_size = [640]
+        else:
+            self.data_size = [3, 84, 84]
         # set normalizer
         mean_pix = [x / 255.0 for x in [120.39586422, 115.59361427, 104.54012653]]
         std_pix = [x / 255.0 for x in [70.68188272, 68.27635443, 72.54505529]]
@@ -41,13 +43,13 @@ class MiniImagenetLoader(data.Dataset):
     def load_dataset(self):
         
         if tt.arg.features:
-            dataset_path = os.path.join(self.root, 'WRN_%s.pickle' % self.partition)
+            dataset_path = os.path.join(self.root, 'tiered_WRN_%s.pickle' % self.partition)
             with open(dataset_path, 'rb') as handle:
                 data = pickle.load(handle)
             return data
         
         # load data
-        dataset_path = os.path.join(self.root, 'mini-imagenet/compacted_datasets', 'mini_imagenet_%s.pickle' % self.partition)
+        dataset_path = os.path.join(self.root, 'compacted_datasets/mini_imagenet_%s.pickle' % self.partition)
         with open(dataset_path, 'rb') as handle:
             data = pickle.load(handle)
 
@@ -111,12 +113,18 @@ class MiniImagenetLoader(data.Dataset):
                 # load sample for support set
                 for i_idx in range(num_shots):
                     # set data
-                    support_data[i_idx + c_idx * num_shots][t_idx] = self.transform(class_data_list[i_idx])
+                    if tt.arg.features:
+                        support_data[i_idx + c_idx * num_shots][t_idx] = class_data_list[i_idx]
+                    else:
+                        support_data[i_idx + c_idx * num_shots][t_idx] = self.transform(class_data_list[i_idx])
                     support_label[i_idx + c_idx * num_shots][t_idx] = c_idx
 
                 # load sample for query set
                 for i_idx in range(num_queries):
-                    query_data[i_idx + c_idx * num_queries][t_idx] = self.transform(class_data_list[num_shots + i_idx])
+                    if tt.arg.features:
+                        query_data[i_idx + c_idx * num_queries][t_idx] = class_data_list[num_shots + i_idx]
+                    else:
+                        query_data[i_idx + c_idx * num_queries][t_idx] = self.transform(class_data_list[num_shots + i_idx])
                     query_label[i_idx + c_idx * num_queries][t_idx] = c_idx
 
         # convert to tensor (num_tasks x (num_ways * (num_supports + num_queries)) x ...)
@@ -136,7 +144,10 @@ class TieredImagenetLoader(data.Dataset):
         # set dataset information
         self.root = root
         self.partition = partition
-        self.data_size = [3, 84, 84]
+        if tt.arg.features:
+            self.data_size = [640]
+        else:
+            self.data_size = [3, 84, 84]
 
         # set normalizer
         mean_pix = [x / 255.0 for x in [120.45, 115.59361427, 104.54012653]]
@@ -159,9 +170,9 @@ class TieredImagenetLoader(data.Dataset):
         self.data = self.load_dataset()
 
     def load_dataset(self):
-        
+        print(tt.arg.features)
         if tt.arg.features:
-            dataset_path = os.path.join(self.root, 'tiered_WRN_%s.pickle' % self.partition)
+            dataset_path = os.path.join(self.root, 'tiered_WRN_eval_%s.pickle' % self.partition)
             with open(dataset_path, 'rb') as handle:
                 data = pickle.load(handle)
             return data
@@ -253,12 +264,18 @@ class TieredImagenetLoader(data.Dataset):
                 # load sample for support set
                 for i_idx in range(num_shots):
                     # set data
-                    support_data[i_idx + c_idx * num_shots][t_idx] = self.transform(class_data_list[i_idx])
+                    if tt.arg.features:
+                        support_data[i_idx + c_idx * num_shots][t_idx] = class_data_list[i_idx]
+                    else:
+                        support_data[i_idx + c_idx * num_shots][t_idx] = self.transform(class_data_list[i_idx])
                     support_label[i_idx + c_idx * num_shots][t_idx] = c_idx
 
                 # load sample for query set
                 for i_idx in range(num_queries):
-                    query_data[i_idx + c_idx * num_queries][t_idx] = self.transform(class_data_list[num_shots + i_idx])
+                    if tt.arg.features:
+                        query_data[i_idx + c_idx * num_queries][t_idx] = class_data_list[num_shots + i_idx]
+                    else:
+                        query_data[i_idx + c_idx * num_queries][t_idx] = self.transform(class_data_list[num_shots + i_idx])
                     query_label[i_idx + c_idx * num_queries][t_idx] = c_idx
 
         # convert to tensor (num_tasks x (num_ways * (num_supports + num_queries)) x ...)
