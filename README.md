@@ -1,6 +1,6 @@
 # TRPN
 ## Introduction
-A pytorch implementation of the IJCAI2020 paper "Transductive Relation-Propagation Network for Few-shot Learning". The code is based on (Edge-labeling Graph Neural Network for Few-shot Learning)[https://github.com/khy0809/fewshot-egnn]
+A pytorch implementation of the IJCAI2020 paper "Transductive Relation-Propagation Network for Few-shot Learning". The code is based on [Edge-labeling Graph Neural Network for Few-shot Learning](https://github.com/khy0809/fewshot-egnn)
 
 **Author:** Yuqing Ma, Shihao Bai, Shan An, Wei Liu, Aishan Liu, Xiantong Zhen and Xianglong Liu
 
