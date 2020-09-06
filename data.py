@@ -39,6 +39,13 @@ class MiniImagenetLoader(data.Dataset):
         self.data = self.load_dataset()
 
     def load_dataset(self):
+        
+        if tt.arg.features:
+            dataset_path = os.path.join(self.root, 'WRN_%s.pickle' % self.partition)
+            with open(dataset_path, 'rb') as handle:
+                data = pickle.load(handle)
+            return data
+        
         # load data
         dataset_path = os.path.join(self.root, 'mini-imagenet/compacted_datasets', 'mini_imagenet_%s.pickle' % self.partition)
         with open(dataset_path, 'rb') as handle:
@@ -152,6 +159,13 @@ class TieredImagenetLoader(data.Dataset):
         self.data = self.load_dataset()
 
     def load_dataset(self):
+        
+        if tt.arg.features:
+            dataset_path = os.path.join(self.root, 'tiered_WRN_%s.pickle' % self.partition)
+            with open(dataset_path, 'rb') as handle:
+                data = pickle.load(handle)
+            return data
+
         # load data
         image_dataset_path = os.path.join(self.root, 'tiered-imagenet/',
                                     '%s_images_png.pkl' % self.partition)
