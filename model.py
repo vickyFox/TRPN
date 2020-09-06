@@ -59,24 +59,24 @@ class GraphConvolution(nn.Module):
 
 
 class TRPN(nn.Module):
-    def __init__(self, n_feat, n_queries, hidden_layers = [2,2,4]):
+    def __init__(self, n_feat, n_queries, hidden_layers = [640,320,320,160]):
         super(TRPN, self).__init__()
         #self.layer_last = nn.Sequential(nn.Linear(in_features=512,
         #                                out_features=128, bias=True),
         #                                nn.BatchNorm1d(128))
 
-        self.fc_1 = nn.Sequential(nn.Linear(in_features=n_feat * 2, out_features=n_feat, bias=True),
+        self.fc_1 = nn.Sequential(nn.Linear(in_features=n_feat * 2, out_features=hidden_layers[0], bias=True),
                                 nn.ReLU(),
-                                nn.Linear(in_features=n_feat, out_features=n_feat // hidden_layers[0], bias=True),
+                                nn.Linear(in_features=hidden_layers[0], out_features=hidden_layers[1], bias=True),
                                 nn.ReLU(),
-                                nn.Linear(in_features=n_feat // hidden_layers[0], out_features=1, bias=True),
+                                nn.Linear(in_features=hidden_layers[1], out_features=1, bias=True),
                                 nn.Sigmoid())
 
-        self.fc_2 = nn.Sequential(nn.Linear(in_features=n_feat * (n_queries + 1), out_features=n_feat // hidden_layers[1], bias=True),
+        self.fc_2 = nn.Sequential(nn.Linear(in_features=n_feat * (n_queries + 1), out_features=hidden_layers[2], bias=True),
                                 nn.ReLU(),
-                                nn.Linear(in_features=n_feat // hidden_layers[1], out_features=n_feat // hidden_layers[2], bias=True),
+                                nn.Linear(in_features=hidden_layers[2], out_features=hidden_layers[3], bias=True),
                                 nn.ReLU(),
-                                nn.Linear(in_features=n_feat // hidden_layers[2], out_features=n_queries, bias=True),
+                                nn.Linear(in_features=hidden_layers[3], out_features=n_queries, bias=True),
                                 nn.Sigmoid())
 
         self.gc = GraphConvolution(n_feat * (n_queries + 1), n_feat * (n_queries + 1))
