@@ -34,24 +34,24 @@ You also can use our [pretrained WRN model](https://drive.google.com/drive/folde
 
 ## Training
 ```
-# ************************** miniImagenet, 5way 1shot *****************************
-$ python3 train.py --dataset mini --num_ways 5 --num_shots 1 --transductive False
-$ python3 train.py --dataset mini --num_ways 5 --num_shots 1 --transductive True
+# ************************** miniImagenet, 5way 1shot  *****************************
+$ python3 conv4_train.py --dataset mini --num_ways 5 --num_shots 1 
+$ python3 WRN_train.py --dataset mini --num_ways 5 --num_shots 1 
 
 # ************************** miniImagenet, 5way 5shot *****************************
-$ python3 train.py --dataset mini --num_ways 5 --num_shots 5 --transductive False
-$ python3 train.py --dataset mini --num_ways 5 --num_shots 5 --transductive True
+$ python3 conv4_train.py --dataset mini --num_ways 5 --num_shots 5 
+$ python3 WRN_train.py --dataset mini --num_ways 5 --num_shots 5 
 
-# ************************** miniImagenet, 10way 5shot *****************************
-$ python3 train.py --dataset mini --num_ways 10 --num_shots 5 --meta_batch_size 20 --transductive True
+# ************************** tieredImagenet, 5way 1shot *****************************
+$ python3 conv4_train.py --dataset tiered --num_ways 5 --num_shots 1 
+$ python3 WRN_train.py --dataset tiered --num_ways 5 --num_shots 1 
 
 # ************************** tieredImagenet, 5way 5shot *****************************
-$ python3 train.py --dataset tiered --num_ways 5 --num_shots 5 --transductive False
-$ python3 train.py --dataset tiered --num_ways 5 --num_shots 5 --transductive True
+$ python3 conv4_train.py --dataset tiered --num_ways 5 --num_shots 5 
+$ python3 WRN_train.py --dataset tiered --num_ways 5 --num_shots 5 
 
 # **************** miniImagenet, 5way 5shot, 20% labeled (semi) *********************
-$ python3 train.py --dataset mini --num_ways 5 --num_shots 5 --num_unlabeled 4 --transductive False
-$ python3 train.py --dataset mini --num_ways 5 --num_shots 5 --num_unlabeled 4 --transductive True
+$ python3 train.py --dataset mini --num_ways 5 --num_shots 5 --num_unlabeled 4
 
 ```
 
