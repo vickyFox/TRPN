@@ -17,3 +17,9 @@ A pytorch implementation of the IJCAI2020 paper "[Transductive Relation-Propagat
   - tensorboardX
 
 An NVIDIA GPU and CUDA 9.0 or higher. 
+
+## Citation
+If you find our code useful, please consider citing our work using the bibtex:
+`
+
+`
