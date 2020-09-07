@@ -18,8 +18,17 @@ A pytorch implementation of the IJCAI2020 paper "[Transductive Relation-Propagat
 
 An NVIDIA GPU and CUDA 9.0 or higher. 
 
-## Citation
-If you find our code useful, please consider citing our work using the bibtex:
-`
+## Getting started
+### mini-ImageNet
+You can download miniImagenet dataset from [here](https://drive.google.com/drive/folders/15WuREBvhEbSWo4fTr1r-vMY0C_6QWv4w).
 
-`
+### tiered-ImageNet
+You can download tieredImagenet dataset from [here](https://drive.google.com/file/d/1g1aIDy2Ar_MViF2gDXFYDBTR-HYecV07/view?usp=drive_open).
+
+
+Because WRN has a large amount of parameters. You can save the extracted feature before the classifaction layer to increase train or test speed. Here we provide the features extracted by WRN:
+* miniImageNet: [train](), [val](), [test]()
+* tieredImageNet: [train](https://drive.google.com/file/d/1dGtfL8EEplJmiXGgxmQNtI36FYKyp-XG/view?usp=sharing), [val](), [test](https://drive.google.com/file/d/1dGtfL8EEplJmiXGgxmQNtI36FYKyp-XG/view?usp=sharing)
+
+You also can use our [pretrained WRN model](https://drive.google.com/drive/folders/1o51s2F7_bpG2k6JOgE9loYtSRIdOH2qc) to generate features for mini or tiered by yourself
+
