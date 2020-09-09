@@ -51,7 +51,7 @@ $ python3 conv4_train.py --dataset tiered --num_ways 5 --num_shots 5
 $ python3 WRN_train.py --dataset tiered --num_ways 5 --num_shots 5 
 
 # **************** miniImagenet, 5way 5shot, 20% labeled (semi) *********************
-$ python3 train.py --dataset mini --num_ways 5 --num_shots 5 --num_unlabeled 4
+$ python3 conv4_train.py --dataset mini --num_ways 5 --num_shots 5 --num_unlabeled 4
 
 ```
 ## Testing
