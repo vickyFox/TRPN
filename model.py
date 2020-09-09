@@ -107,7 +107,11 @@ class TRPN(nn.Module):
             learned_score = self.fc_1(x_ij[i].contiguous().view(num_samples ** 2, in_features_2)).view(num_samples, num_samples)
             learned_adj = learned_score.clone()
             ones = torch.ones(learned_adj[:num_supports, :num_supports].size()).to(tt.arg.device)
-            learned_adj[:num_supports, :num_supports] = torch.where(adj[i] > 0, ones, -learned_adj[:num_supports, :num_supports])
+            if tt.arg.num_unlabeled >0:
+                learned_adj[:num_supports, :num_supports] = torch.where(adj[i] == 1.0, ones ,learned_adj[:num_supports, :num_supports])
+                learned_adj[:num_supports, :num_supports] = torch.where(adj[i] == 0,-learned_adj[:num_supports, :num_supports],learned_adj[:num_supports, :num_supports])
+            else:
+                learned_adj[:num_supports, :num_supports] = torch.where(adj[i] > 0, ones, -learned_adj[:num_supports, :num_supports])
             # num_samples x num_queries
             query_score = self.fc_2(F.relu(self.gc(gcn_input_feat[i], learned_adj)))
             learned_score_list.append(learned_score)

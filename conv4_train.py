@@ -124,11 +124,11 @@ class ModelTrainer(object):
             query_score_list, learned_score_list = self.gcn_module(node_feat=full_data, adj=init_edge[:, 0, :num_supports, :num_supports])
             # print(query_score_list.size(), learned_score_list.size())
             # (4) compute loss
-            loss1_pos = (self.bce_loss(learned_score_list, full_edge[:, 0, :, :]) * full_edge[:,0,:,:]).sum() / (full_edge[:,0,:,:].sum())
-            loss1_neg = (self.bce_loss(learned_score_list, full_edge[:, 0, :, :]) * (1 -  full_edge[:,0,:,:])).sum() / ((1. - full_edge[:,0,:,:]).sum())
+            loss1_pos = (self.bce_loss(learned_score_list, full_edge[:, 0, :, :]) * full_edge[:,0,:,:] * evaluation_mask).sum() / ((evaluation_mask * full_edge[:,0,:,:]).sum())
+            loss1_neg = (self.bce_loss(learned_score_list, full_edge[:, 0, :, :]) * (1 -  full_edge[:,0,:,:]) * evaluation_mask).sum() / ( (evaluation_mask * (1. - full_edge[:,0,:,:])).sum())
 
-            loss2_pos =( self.bce_loss(query_score_list, full_edge[:, 0, num_supports:, :]) * full_edge[:, 0, num_supports:, :]).sum() / (full_edge[:, 0, num_supports:, :].sum())
-            loss2_neg =( self.bce_loss(query_score_list, full_edge[:, 0, num_supports:, :]) *(1. -  full_edge[:, 0, num_supports:, :])).sum() / ((1.-full_edge[:, 0, num_supports:, :]).sum())
+            loss2_pos =( self.bce_loss(query_score_list, full_edge[:, 0, num_supports:, :]) * full_edge[:, 0, num_supports:, :] * evaluation_mask[:,num_supports:, :]).sum() / ((evaluation_mask[:,num_supports:, :]*full_edge[:, 0, num_supports:, :]).sum())
+            loss2_neg =( self.bce_loss(query_score_list, full_edge[:, 0, num_supports:, :]) *(1. -  full_edge[:, 0, num_supports:, :]) * evaluation_mask[:,num_supports:, :]).sum() / ((evaluation_mask[:,num_supports:, :]*(1.-full_edge[:, 0, num_supports:, :])).sum())
 
 
 
@@ -236,14 +236,17 @@ class ModelTrainer(object):
             query_score_list, learned_score_list = self.gcn_module(node_feat=full_data, adj=init_edge[:, 0, :num_supports, :num_supports])
  
             # (4) compute loss
-            loss1 = self.bce_loss(learned_score_list, full_edge[:, 0, :, :]).mean()
-            loss2 = self.bce_loss(query_score_list, full_edge[:, 0, num_supports:, :]).mean()
+            loss1_pos = (self.bce_loss(learned_score_list, full_edge[:, 0, :, :]) * full_edge[:,0,:,:] * evaluation_mask).sum() / ((evaluation_mask * full_edge[:,0,:,:]).sum())
+            loss1_neg = (self.bce_loss(learned_score_list, full_edge[:, 0, :, :]) * (1 -  full_edge[:,0,:,:]) * evaluation_mask).sum() / ( (evaluation_mask * (1. - full_edge[:,0,:,:])).sum())
 
+            loss2_pos =( self.bce_loss(query_score_list, full_edge[:, 0, num_supports:, :]) * full_edge[:, 0, num_supports:, :] * evaluation_mask[:,num_supports:, :]).sum() / ((evaluation_mask[:,num_supports:, :]*full_edge[:, 0, num_supports:, :]).sum())
+            loss2_neg =( self.bce_loss(query_score_list, full_edge[:, 0, num_supports:, :]) *(1. -  full_edge[:, 0, num_supports:, :]) * evaluation_mask[:,num_supports:, :]).sum() / ((evaluation_mask[:,num_supports:, :]*(1.-full_edge[:, 0, num_supports:, :])).sum())
             # compute node accuracy: num_tasks x num_quries x num_ways == {num_tasks x num_quries x num_supports} * {num_tasks x num_supports x num_ways}
+            #query_score_list = query_score_list * evaluation_mask[:,num_supports:]
             query_node_pred1 = torch.bmm(query_score_list[:, :, :num_supports], self.one_hot_encode(tt.arg.num_ways_test, support_label.long()))
             query_node_accr1 = torch.eq(torch.max(query_node_pred1, -1)[1], query_label.long()).float().mean()
 
-            total_loss = (loss1 + loss2) / 2
+            total_loss = (loss1_pos + loss1_neg + loss2_pos + loss2_neg) / 4
             # print(total_loss)
             query_edge_losses += [total_loss.item()]
             query_node_accrs1 += [query_node_accr1.item()]
