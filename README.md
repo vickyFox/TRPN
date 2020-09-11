@@ -56,7 +56,7 @@ $ python3 conv4_train.py --dataset mini --num_ways 5 --num_shots 5 --num_unlabel
 ```
 ## Testing
 ``` 
-# ************************** miniImagenet, 5way 5shot *****************************
+# ************************** miniImagenet, Cway Kshot *****************************
 $ python3 conv4_eval.py --test_model your_path --dataset mini --num_ways C --num_shots K 
 $ python3 WRN_eval.py --test_model your_path --dataset mini --num_ways C --num_shots K 
 
