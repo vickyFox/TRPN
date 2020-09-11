@@ -46,7 +46,6 @@ class ModelTrainer(object):
     def train(self):
         val_acc = self.val_acc
 
-        # set edge mask (to distinguish support and query edges)
         num_supports = tt.arg.num_ways_train * tt.arg.num_shots_train
         num_queries = tt.arg.num_ways_train * 1
         num_samples = num_supports + num_queries
@@ -138,7 +137,6 @@ class ModelTrainer(object):
 
             total_loss = (loss1_pos + loss1_neg + loss2_pos + loss2_neg) / 4
             total_loss.backward()
-            # print(total_loss)
             self.optimizer.step()
             # adjust learning rate
             self.adjust_learning_rate(optimizers=[self.optimizer],

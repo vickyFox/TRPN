@@ -37,7 +37,6 @@ class ModelTrainer(object):
     def train(self):
         val_acc = self.val_acc
 
-        # set edge mask (to distinguish support and query edges)
         num_supports = tt.arg.num_ways_train * tt.arg.num_shots_train
         num_queries = tt.arg.num_ways_train * 1
         num_samples = num_supports + num_queries
@@ -87,7 +86,6 @@ class ModelTrainer(object):
             # batch_size x num_samples
             full_label = torch.cat([support_label, query_label], 1)
 
-            # 包含了所有边的特征
             # batch_size x 2 x num_samples x num_samples
             full_edge = self.label2edge(full_label)
 
