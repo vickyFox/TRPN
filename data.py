@@ -43,7 +43,7 @@ class MiniImagenetLoader(data.Dataset):
     def load_dataset(self):
         
         if tt.arg.features:
-            dataset_path = os.path.join(self.root, 'tiered_WRN_%s.pickle' % self.partition)
+            dataset_path = os.path.join(self.root, 'WRN_%s.pickle' % self.partition)
             with open(dataset_path, 'rb') as handle:
                 data = pickle.load(handle)
             return data
@@ -117,7 +117,7 @@ class MiniImagenetLoader(data.Dataset):
                         support_data[i_idx + c_idx * num_shots][t_idx] = class_data_list[i_idx]
                     else:
                         support_data[i_idx + c_idx * num_shots][t_idx] = self.transform(class_data_list[i_idx])
-                    support_label[i_idx + c_idx * num_shots][t_idx] = c_idx
+                    support_label[i_idx + c_idx * num_shots][t_idx] = label_list[c_idx]
 
                 # load sample for query set
                 for i_idx in range(num_queries):
@@ -125,7 +125,7 @@ class MiniImagenetLoader(data.Dataset):
                         query_data[i_idx + c_idx * num_queries][t_idx] = class_data_list[num_shots + i_idx]
                     else:
                         query_data[i_idx + c_idx * num_queries][t_idx] = self.transform(class_data_list[num_shots + i_idx])
-                    query_label[i_idx + c_idx * num_queries][t_idx] = c_idx
+                    query_label[i_idx + c_idx * num_queries][t_idx] = label_list[c_idx]
 
         # convert to tensor (num_tasks x (num_ways * (num_supports + num_queries)) x ...)
         support_data = torch.stack([torch.from_numpy(data).float().to(tt.arg.device) for data in support_data], 1)
@@ -268,7 +268,7 @@ class TieredImagenetLoader(data.Dataset):
                         support_data[i_idx + c_idx * num_shots][t_idx] = class_data_list[i_idx]
                     else:
                         support_data[i_idx + c_idx * num_shots][t_idx] = self.transform(class_data_list[i_idx])
-                    support_label[i_idx + c_idx * num_shots][t_idx] = c_idx
+                    support_label[i_idx + c_idx * num_shots][t_idx] = label_list[c_idx]
 
                 # load sample for query set
                 for i_idx in range(num_queries):
@@ -276,7 +276,7 @@ class TieredImagenetLoader(data.Dataset):
                         query_data[i_idx + c_idx * num_queries][t_idx] = class_data_list[num_shots + i_idx]
                     else:
                         query_data[i_idx + c_idx * num_queries][t_idx] = self.transform(class_data_list[num_shots + i_idx])
-                    query_label[i_idx + c_idx * num_queries][t_idx] = c_idx
+                    query_label[i_idx + c_idx * num_queries][t_idx] = label_list[c_idx]
 
         # convert to tensor (num_tasks x (num_ways * (num_supports + num_queries)) x ...)
 
