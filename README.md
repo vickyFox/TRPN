@@ -54,6 +54,7 @@ $ python3 WRN_train.py --dataset tiered --num_ways 5 --num_shots 5
 $ python3 conv4_train.py --dataset mini --num_ways 5 --num_shots 5 --num_unlabeled 4
 
 ```
+You can download our pretrained model from [here](https://drive.google.com/drive/folders/1irkD1RFrbG03F3KGIWjwjyx62QD2akt5?usp=sharing) to reproduce the results of the paper.
 ## Testing
 ``` 
 # ************************** miniImagenet, Cway Kshot *****************************
